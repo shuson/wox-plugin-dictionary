@@ -29,23 +29,27 @@ class Main(Wox):
 	return requests.get(url)
 			
     def query(self, param):
-	r = self.request(URL + param.strip())
+	r = self.request(URL + param)
 	bs = BeautifulSoup(r.content, 'html.parser')
-	wordType = bs.find('header', 'luna-data-header').text
-        means = bs.find('section', 'def-pbk ce-spot').find_all('div', 'def-set')
-	result = []
-	for m in means:
+	wordType = ""
+	means = []
+	if bs.find('header', 'luna-data-header'):
+            wordType = bs.find('header', 'luna-data-header').get_text(strip=True)
+	if bs.find('section', 'def-pbk ce-spot'):
+            means = bs.find('section', 'def-pbk ce-spot').find_all('div', 'def-set')
 
-            title = m.text
-            subtitle = wordType
-            
+	result = []
+	index = 0
+	for m in means:
+            title = m.find('div', 'def-content').get_text(strip=True)
             item = {
-                'Title': full2half(title),
-                'SubTitle': subtitle,
+                'Title': full2half(str(index + 1) + ": " + title),
+                'Subtitle': wordType,
                 'IcoPath': os.path.join('img', 'dc.png')
             }
             result.append(item)
-        
+            index+=1
+            
 	return result
     
     def open_url(self, url):
