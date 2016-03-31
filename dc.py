@@ -33,19 +33,35 @@ class Main(Wox):
 	bs = BeautifulSoup(r.content, 'html.parser')
 	wordType = ""
 	means = []
+	pron = {
+                'Title': "Not Found"
+            }
 	if bs.find('header', 'luna-data-header'):
             wordType = bs.find('header', 'luna-data-header').get_text(strip=True)
 	if bs.find('section', 'def-pbk ce-spot'):
             means = bs.find('section', 'def-pbk ce-spot').find_all('div', 'def-set')
-
-	result = []
+        if bs.find('span', 'pron spellpron'):
+            pron = {
+                    'Title': "Pronounce: " + bs.find('span', 'pron spellpron').get_text(strip=True),
+                    'IcoPath': os.path.join('img', 'dc.png'),
+                    'JsonRPCAction': {
+                        'method': 'open_url',
+                        'parameters': [URL + param]
+                    }
+                }
+        
+	result = [pron]
 	index = 0
 	for m in means:
             title = m.find('div', 'def-content').get_text(strip=True)
             item = {
                 'Title': full2half(str(index + 1) + ": " + title),
                 'Subtitle': wordType,
-                'IcoPath': os.path.join('img', 'dc.png')
+                'IcoPath': os.path.join('img', 'dc.png'),
+                'JsonRPCAction': {
+                        'method': 'open_url',
+                        'parameters': [URL + param]
+                }
             }
             result.append(item)
             index+=1
