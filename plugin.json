@@ -4,7 +4,7 @@
   "Name":"dictionary.com",
   "Description":"dictionary.com plugin for wox",
   "Author":"nevermoi",
-  "Version":"0.0.2",
+  "Version":"0.0.1",
   "Language":"python",
   "Website":"https://github.com/shuson/wox-plugin-dictionary",
   "IcoPath": "img\\dc.png",
